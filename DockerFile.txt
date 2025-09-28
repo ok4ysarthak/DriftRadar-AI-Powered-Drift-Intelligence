@@ -1,0 +1,41 @@
+# Use a slim Python image for a smaller footprint
+FROM python:3.11-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file and install dependencies first (for better caching)
+COPY requirements.txt .
+RUN pip install --no-cache-dir --default-timeout=300 -r requirements.txt
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose a port for the future API (Sprint 2)
+EXPOSE 8000
+
+# Command to run the drift monitor script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+CMD ["/app/start.sh"]
+
+# # Use a Node.js base image
+# FROM node:18-alpine
+
+# # Set the working directory
+# WORKDIR /app
+
+# # Copy package.json and package-lock.json (if they exist)
+# COPY package*.json ./
+
+# # Install dependencies
+# RUN npm install
+
+# # Copy the rest of the application code
+# COPY . .
+
+# # Expose the development server port
+# EXPOSE 3000
+
+# # Command to start the development server
+# CMD ["npm", "run", "dev"]
